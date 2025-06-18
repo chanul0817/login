@@ -29,18 +29,14 @@ dependencies {
     
     // Database
     runtimeOnly 'com.h2database:h2'
-
-    // Jackson
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
-    implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'
-    implementation 'com.fasterxml:classmate:1.5.1'
-
+    
+    // JPA
+    implementation 'org.hibernate.orm:hibernate-core'
+    
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-
+    
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'

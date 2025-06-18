@@ -3,7 +3,7 @@ package com.oauth.login.service;
 import com.oauth.login.domain.user.EmailVerificationToken;
 import com.oauth.login.domain.user.User;
 import com.oauth.login.domain.user.UserRole;
-import com.oauth_login.dto.RegistrationRequest;
+import com.oauth.login.dto.RegistrationRequest;
 import com.oauth.login.exception.UserAlreadyExistsException;
 import com.oauth.login.repository.EmailVerificationTokenRepository;
 import com.oauth.login.repository.UserRepository;

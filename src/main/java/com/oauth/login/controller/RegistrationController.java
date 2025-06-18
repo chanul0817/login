@@ -2,8 +2,10 @@ package com.oauth.login.controller;
 
 import com.oauth.login.dto.RegistrationRequest;
 import com.oauth.login.service.RegistrationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,7 +19,7 @@ public class RegistrationController {
     private final RegistrationService registrationService;
     
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest request) {
         registrationService.register(request);
         
         Map<String, String> response = new HashMap<>();
