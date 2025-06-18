@@ -38,7 +38,8 @@ public class SecurityConfig {
                     "/oauth2/**",
                     "/error",
                     "/api/auth/**",
-                    "/h2-console/**"
+                    "/h2-console/**",
+                    "/register"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

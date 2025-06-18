@@ -41,8 +41,37 @@ public class OAuth2Controller {
      * 회원가입 페이지
      */
     @GetMapping("/register")
-    public String register() {
+    public String showRegisterForm() {
         return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam(required = false) String verificationCode,
+            Model model) {
+        
+        // In a real application, you would:
+        // 1. Verify the verification code
+        // 2. Check if email already exists
+        // 3. Hash the password
+        // 4. Save the user to database
+        
+        // For now, we'll just do basic validation
+        if (email == null || email.isEmpty() || password == null || password.length() < 6) {
+            model.addAttribute("error", "이메일과 비밀번호를 정확히 입력해주세요.");
+            return "register";
+        }
+        
+        // Check if verification code was provided (in a real app, verify it matches)
+        if (verificationCode == null || verificationCode.isEmpty()) {
+            model.addAttribute("error", "이메일 인증이 필요합니다.");
+            return "register";
+        }
+        
+        // If everything is valid, redirect to loginSuccess
+        return "redirect:/loginSuccess";
     }
 
     /**

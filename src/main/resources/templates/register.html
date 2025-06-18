@@ -84,11 +84,20 @@
         <p th:text="${error}"></p>
     </div>
     
-    <form id="registerForm" th:action="@{/api/auth/register}" method="post" onsubmit="return validateForm()">
+    <form id="registerForm" th:action="@{/register}" method="post" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="email">이메일</label>
-            <input type="email" id="email" name="email" required>
+            <div style="display: flex; gap: 10px;">
+                <input type="email" id="email" name="email" required>
+                <button type="button" onclick="sendVerificationCode()" class="btn" style="white-space: nowrap;">인증번호 전송</button>
+            </div>
             <div id="emailError" class="error-message"></div>
+        </div>
+        
+        <div class="form-group" id="verificationCodeGroup" style="display: none;">
+            <label for="verificationCode">인증번호</label>
+            <input type="text" id="verificationCode" name="verificationCode" required>
+            <div id="verificationCodeError" class="error-message"></div>
         </div>
         
         <div class="form-group">
@@ -99,7 +108,7 @@
         
         <div class="form-group">
             <label for="confirmPassword">비밀번호 확인</label>
-            <input type="password" id="confirmPassword" required>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
             <div id="confirmPasswordError" class="error-message"></div>
         </div>
         
@@ -144,6 +153,18 @@ function validateForm() {
     
     return isValid;
 }
+    function sendVerificationCode() {
+        const email = document.getElementById('email').value;
+        if (!email) {
+            alert('이메일을 입력해주세요.');
+            return;
+        }
+        
+        // Here you would typically make an API call to send the verification code
+        // For now, we'll just show the verification code field
+        document.getElementById('verificationCodeGroup').style.display = 'block';
+        alert('인증번호가 전송되었습니다. 이메일을 확인해주세요.');
+    }
 </script>
 </body>
 </html>
