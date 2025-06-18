@@ -1,4 +1,0 @@
--- Initial data can be added here if needed
--- For example, admin user:
--- INSERT INTO users (email, password, is_verified, role) 
--- VALUES ('admin@example.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', true, 'ROLE_ADMIN');

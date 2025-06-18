@@ -1,10 +1,10 @@
 spring:
   # Database Configuration
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
+    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://localhost:3306/login?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.mariadb.jdbc.Driver}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
     
   jpa:
     hibernate:
@@ -13,8 +13,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
-        default_schema: public
+        dialect: org.hibernate.dialect.MariaDB103Dialect
+        default_schema: login
     open-in-view: false
     
   h2:
@@ -37,14 +37,14 @@ spring:
       client:
         registration:
           google:
-            client-id: your-google-client-id
-            client-secret: your-google-client-secret
+            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
             scope:
               - email
               - profile
           naver:
-            client-id: your-naver-client-id
-            client-secret: your-naver-client-secret
+            client-id: ${NAVER_CLIENT_ID:your-naver-client-id}
+            client-secret: ${NAVER_CLIENT_SECRET:your-naver-client-secret}
             client-name: Naver
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"

@@ -28,10 +28,11 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     
     // Database
-    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB JDBC Driver
     
     // JPA
     implementation 'org.hibernate.orm:hibernate-core'
+    implementation 'org.hibernate.orm:hibernate-hikaricp' // HikariCP connection pool
     
     // Lombok
     compileOnly 'org.projectlombok:lombok'
