@@ -86,41 +86,41 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>로그인 성공 <span class="provider-badge" th:text="${provider}">provider</span></h1>
-        
-        <div class="user-info" th:if="${id}">
-            <img th:if="${profileImage != '정보 없음'}" 
-                 th:src="${profileImage}" 
-                 alt="프로필 이미지" 
-                 class="profile-image">
-            
-            <p>
-                <strong>아이디:</strong>
-                <span th:text="${id}">아이디</span>
-            </p>
-            <p>
-                <strong>이름:</strong>
-                <span th:text="${name}">이름</span>
-            </p>
-            <p>
-                <strong>이메일:</strong>
-                <span th:text="${email}">이메일</span>
-            </p>
-        </div>
-        
-        <div class="actions" style="text-align: center; margin-top: 30px;">
-            <a href="/" class="btn">홈으로</a>
-            <a href="/user" class="btn">사용자 정보 (JSON)</a>
-            <a href="/logout" class="btn btn-logout">로그아웃</a>
-        </div>
-        
-        <!-- 디버깅용: 모든 속성 출력 -->
-        <div style="margin-top: 50px; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px;">
-            <h3>모든 사용자 속성:</h3>
-            <pre th:text="${#maps.toString(@userService.getAllUserAttributes(#authentication))}" 
-                 style="white-space: pre-wrap; word-wrap: break-word;"></pre>
-        </div>
+<div class="container">
+    <h1>로그인 성공 <span class="provider-badge" th:text="${provider}">provider</span></h1>
+
+    <div class="user-info" th:if="${id}">
+        <img th:if="${profileImage != '정보 없음'}"
+             th:src="${profileImage}"
+             alt="프로필 이미지"
+             class="profile-image">
+
+        <p>
+            <strong>아이디:</strong>
+            <span th:text="${id}">아이디</span>
+        </p>
+        <p>
+            <strong>이름:</strong>
+            <span th:text="${name}">이름</span>
+        </p>
+        <p>
+            <strong>이메일:</strong>
+            <span th:text="${email}">이메일</span>
+        </p>
     </div>
+
+    <div class="actions" style="text-align: center; margin-top: 30px;">
+        <a href="/" class="btn">홈으로</a>
+        <a href="/user" class="btn">사용자 정보 (JSON)</a>
+        <a href="/logout" class="btn btn-logout">로그아웃</a>
+    </div>
+
+    <!-- 디버깅용: 모든 속성 출력 -->
+    <div style="margin-top: 50px; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px;">
+        <h3>모든 사용자 속성:</h3>
+        <pre th:text="${#maps.toString(@userService.getAllUserAttributes(#authentication))}"
+             style="white-space: pre-wrap; word-wrap: break-word;"></pre>
+    </div>
+</div>
 </body>
 </html>

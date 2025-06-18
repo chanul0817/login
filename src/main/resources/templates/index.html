@@ -3,54 +3,218 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>OAuth2 로그인 예제</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - WhereGam</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            display: flex;
+            max-width: 900px;
+            width: 90%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .login-section {
+            flex: 1;
+            padding: 50px;
+            box-sizing: border-box;
+        }
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             text-align: center;
         }
-        .login-buttons {
-            margin-top: 50px;
+        h1 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
         }
-        .login-btn {
-            display: inline-block;
-            margin: 10px;
-            padding: 12px 24px;
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
             border: none;
             border-radius: 4px;
-            color: white;
             font-size: 16px;
             cursor: pointer;
+            margin: 10px 0;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3498db;
+            color: #3498db;
+        }
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #777;
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+        .divider span {
+            padding: 0 10px;
+        }
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
             text-decoration: none;
         }
-        .google { background-color: #DB4437; }
-        .naver { background-color: #03C75A; }
-        .kakao { background-color: #FFEB00; color: #3C1E1E; }
+        .social-btn:hover {
+            background-color: #f8f9fa;
+        }
+        .social-btn i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .success-message {
+            color: #27ae60;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        .welcome-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .welcome-section p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .welcome-section {
+                display: none;
+            }
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <h1>OAuth2 로그인 예제</h1>
-    
-    <div sec:authorize="!isAuthenticated()" class="login-buttons">
-        <h2>소셜 계정으로 로그인</h2>
-        <a class="login-btn google" th:href="@{/oauth2/authorization/google}">Google 로그인</a>
-        <a class="login-btn naver" th:href="@{/oauth2/authorization/naver}">Naver 로그인</a>
-        <a class="login-btn kakao" th:href="@{/oauth2/authorization/kakao}">Kakao 로그인</a>
-    </div>
-    
-    <div sec:authorize="isAuthenticated()">
-        <p>이미 로그인되어 있습니다. <a th:href="@{/user}">사용자 정보 보기</a> 또는 <a th:href="@{/logout}">로그아웃</a></p>
-    </div>
-    
-    <div th:if="${param.error}" class="error">
-        <p style="color: red;">로그인 중 오류가 발생했습니다.</p>
-    </div>
-    
-    <div style="margin-top: 50px; font-size: 14px; color: #666;">
-        <p>각 소셜 로그인을 사용하려면 application.yml 파일에 해당 서비스의 클라이언트 ID와 시크릿 키를 설정해야 합니다.</p>
+    <div class="container">
+        <div class="login-section">
+            <h1>로그인</h1>
+            
+            <!-- 로그인 폼 -->
+            <div sec:authorize="!isAuthenticated()">
+                <form th:action="@{/api/auth/login}" method="post" id="loginForm">
+                    <div class="form-group">
+                        <label for="username">이메일</label>
+                        <input type="email" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div th:if="${param.error}" class="error-message">
+                        <p>이메일 또는 비밀번호가 올바르지 않습니다.</p>
+                    </div>
+                    <button type="submit" class="btn">로그인</button>
+                </form>
+                
+                <div class="divider"><span>또는</span></div>
+                
+                <!-- 소셜 로그인 버튼 -->
+                <div class="social-login">
+                    <a href="/oauth2/authorization/google" class="social-btn">
+                        <i class="fab fa-google" style="color: #DB4437;"></i> Google로 계속하기
+                    </a>
+                    <a href="/oauth2/authorization/naver" class="social-btn">
+                        <i class="fas fa-comment" style="color: #03C75A;"></i> Naver로 계속하기
+                    </a>
+                    <a href="/oauth2/authorization/kakao" class="social-btn" style="background-color: #FEE500; color: #3C1E1E;">
+                        <i class="fas fa-comment" style="color: #3C1E1E;"></i> 카카오로 계속하기
+                    </a>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>계정이 없으신가요? <a href="/register" style="color: #3498db; text-decoration: none;">회원가입</a></p>
+                </div>
+            </div>
+            
+            <!-- 로그인 상태일 때 보여줄 내용 -->
+            <div sec:authorize="isAuthenticated()" style="text-align: center;">
+                <p>이미 로그인되어 있습니다.</p>
+                <a th:href="@{/user}" class="btn">내 정보 보기</a>
+                <a th:href="@{/logout}" class="btn btn-outline">로그아웃</a>
+            </div>
+        </div>
+        
+        <div class="welcome-section">
+            <h2>로그인에 오신 것을 환영합니다!</h2>
+            <p>허은서 조용히 해라</p>
+            <p>힘들다</p>
+            <a href="/register" class="btn" style="background-color: transparent; border: 1px solid white; margin-top: 20px;">회원가입</a>
+        </div>
     </div>
 </body>
 </html>

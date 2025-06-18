@@ -29,6 +29,7 @@ dependencies {
     
     // Database
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB JDBC Driver
+    runtimeOnly 'com.h2database:h2' // H2 Database
     
     // JPA
     implementation 'org.hibernate.orm:hibernate-core'

@@ -36,6 +36,14 @@ public class OAuth2Controller {
         }
         return "index";
     }
+    
+    /**
+     * 회원가입 페이지
+     */
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
 
     /**
      * 로그인 성공 시 호출되는 엔드포인트

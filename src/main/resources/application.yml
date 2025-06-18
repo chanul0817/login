@@ -1,10 +1,12 @@
 spring:
   # Database Configuration
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://localhost:3306/login?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.mariadb.jdbc.Driver}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    url: jdbc:h2:mem:login;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ''
+    hikari:
+      maximum-pool-size: 5
     
   jpa:
     hibernate:
@@ -13,8 +15,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MariaDB103Dialect
-        default_schema: login
+        dialect: org.hibernate.dialect.H2Dialect
     open-in-view: false
     
   h2:
@@ -23,13 +24,11 @@ spring:
       path: /h2-console
       settings:
         web-allow-others: false
+        trace: false
       
   sql:
     init:
-      mode: always
-      platform: h2
-      schema: classpath:schema.sql
-      data: classpath:data.sql
+      mode: never
   
   # Security Configuration
   security:
@@ -52,17 +51,17 @@ spring:
               - nickname
               - email
               - profile
-            client-authentication-method: POST
           kakao:
-            client-id: your-kakao-client-id
-            client-secret: your-kakao-client-secret
+            client-id: ${KAKAO_CLIENT_ID:your-kakao-client-id}
+            client-secret: ${KAKAO_CLIENT_SECRET:your-kakao-client-secret}
             client-name: Kakao
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-authentication-method: POST
             scope:
               - profile_nickname
               - account_email
-            client-authentication-method: POST
+              - profile_image
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
@@ -74,9 +73,31 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
+            
+  # Thymeleaf Configuration
   thymeleaf:
     cache: false
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:your-jwt-secret-key-here}
+  access-token-expiration: 86400000  # 1 day in milliseconds
+  refresh-token-expiration: 2592000000  # 30 days in milliseconds
+
+# Email Configuration
+email:
+  host: ${EMAIL_HOST:smtp.gmail.com}
+  port: ${EMAIL_PORT:587}
+  username: ${EMAIL_USERNAME:your-email@gmail.com}
+  password: ${EMAIL_PASSWORD:your-email-password}
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+        ssl:
+          trust: smtp.gmail.com
 
 server:
   port: 8080
