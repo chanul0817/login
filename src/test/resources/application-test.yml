@@ -1,0 +1,6 @@
+# Test configuration
+spring:
+  main:
+    web-application-type: servlet
+  thymeleaf:
+    cache: false

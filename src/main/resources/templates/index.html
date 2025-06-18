@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth2 로그인 예제</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .login-buttons {
+            margin-top: 50px;
+        }
+        .login-btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .google { background-color: #DB4437; }
+        .naver { background-color: #03C75A; }
+        .kakao { background-color: #FFEB00; color: #3C1E1E; }
+    </style>
+</head>
+<body>
+    <h1>OAuth2 로그인 예제</h1>
+    
+    <div sec:authorize="!isAuthenticated()" class="login-buttons">
+        <h2>소셜 계정으로 로그인</h2>
+        <a class="login-btn google" th:href="@{/oauth2/authorization/google}">Google 로그인</a>
+        <a class="login-btn naver" th:href="@{/oauth2/authorization/naver}">Naver 로그인</a>
+        <a class="login-btn kakao" th:href="@{/oauth2/authorization/kakao}">Kakao 로그인</a>
+    </div>
+    
+    <div sec:authorize="isAuthenticated()">
+        <p>이미 로그인되어 있습니다. <a th:href="@{/user}">사용자 정보 보기</a> 또는 <a th:href="@{/logout}">로그아웃</a></p>
+    </div>
+    
+    <div th:if="${param.error}" class="error">
+        <p style="color: red;">로그인 중 오류가 발생했습니다.</p>
+    </div>
+    
+    <div style="margin-top: 50px; font-size: 14px; color: #666;">
+        <p>각 소셜 로그인을 사용하려면 application.yml 파일에 해당 서비스의 클라이언트 ID와 시크릿 키를 설정해야 합니다.</p>
+    </div>
+</body>
+</html>

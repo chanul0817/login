@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 실패</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .error-container {
+            margin-top: 50px;
+            padding: 20px;
+            border: 1px solid #f5c6cb;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>로그인 실패</h1>
+        <p>죄송합니다. 로그인 중 문제가 발생했습니다.</p>
+        <p th:if="${error}" th:text="${error}"></p>
+        <p>다시 시도해 주시거나 관리자에게 문의해 주세요.</p>
+        <a href="/" class="btn">홈으로 돌아가기</a>
+    </div>
+    
+    <div style="margin-top: 30px; font-size: 14px; color: #666;">
+        <p>문제가 지속되면 다음을 확인해 주세요:</p>
+        <ul style="list-style: none; padding: 0;">
+            <li>• 인터넷 연결 상태 확인</li>
+            <li>• 소셜 로그인 서비스 설정 확인 (Google, Naver, Kakao 개발자 콘솔)</li>
+            <li>• 애플리케이션 설정의 리다이렉트 URI가 올바른지 확인</li>
+        </ul>
+    </div>
+</body>
+</html>
