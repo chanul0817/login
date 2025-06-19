@@ -51,6 +51,53 @@ public class RegistrationService {
         emailService.sendVerificationEmail(user.getEmail(), verificationUrl);
     }
     
+<<<<<<< HEAD
+=======
+    /**
+     * 이메일로 인증번호 전송
+     * @param email 대상 이메일 주소
+     * @return 생성된 인증 토큰
+     */
+    @Transactional
+    public String sendVerificationEmail(String email) {
+        // 이미 가입된 이메일인지 확인
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalStateException("이미 가입된 이메일 주소입니다.");
+        }
+        
+        // 기존 토큰이 있으면 삭제
+        userRepository.findByEmail(email).ifPresent(user -> {
+            tokenRepository.deleteByUser(user);
+        });
+        
+        // 새 토큰 생성 (임시로 6자리 숫자 생성)
+        String token = String.format("%06d", (int)(Math.random() * 1000000));
+        
+        // 토큰 저장 (실제 구현에서는 이메일로 전송)
+        User tempUser = User.builder()
+                .email(email)
+                .password("temp" + System.currentTimeMillis()) // 임시 비밀번호
+                .role(UserRole.ROLE_USER)
+                .isVerified(false)
+                .build();
+        
+        userRepository.save(tempUser);
+        
+        EmailVerificationToken verificationToken = new EmailVerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUser(tempUser);
+        verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(10)); // 10분 후 만료
+        tokenRepository.save(verificationToken);
+        
+        // 이메일 전송 (개발 환경에서는 콘솔에 출력)
+        String verificationMessage = String.format(
+            "인증번호: %s\n이 인증번호는 10분간 유효합니다.", token);
+        emailService.sendVerificationEmail(email, verificationMessage);
+        
+        return token;
+    }
+    
+>>>>>>> 4256b0b (거의 다했다)
     @Transactional
     public boolean verifyEmail(String token) {
         return tokenRepository.findByToken(token)
