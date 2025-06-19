@@ -4,73 +4,6 @@
     <meta charset="UTF-8">
     <title>회원가입</title>
     <style>
-<<<<<<< HEAD
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 20px 0;
-            text-decoration: none;
-            text-align: center;
-        }
-        .btn:hover {
-            background-color: #2980b9;
-        }
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .login-link a {
-            color: #3498db;
-            text-decoration: none;
-        }
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-=======
         :root {
             --primary-color: #4a6bff;
             --primary-hover: #3a56d4;
@@ -340,53 +273,12 @@
                 font-size: 14px;
             }
         }
->>>>>>> 4256b0b (거의 다했다)
-        .error-message {
-            color: #e74c3c;
-            font-size: 14px;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>회원가입</h1>
     
-    <div th:if="${error}" class="error-message">
-        <p th:text="${error}"></p>
-    </div>
-    
-<<<<<<< HEAD
-    <form id="registerForm" th:action="@{/register}" method="post" onsubmit="return validateForm()">
-        <div class="form-group">
-            <label for="email">이메일</label>
-            <div style="display: flex; gap: 10px;">
-                <input type="email" id="email" name="email" required>
-                <button type="button" onclick="sendVerificationCode()" class="btn" style="white-space: nowrap;">인증번호 전송</button>
-            </div>
-            <div id="emailError" class="error-message"></div>
-        </div>
-        
-        <div class="form-group" id="verificationCodeGroup" style="display: none;">
-            <label for="verificationCode">인증번호</label>
-            <input type="text" id="verificationCode" name="verificationCode" required>
-            <div id="verificationCodeError" class="error-message"></div>
-        </div>
-        
-        <div class="form-group">
-            <label for="password">비밀번호 (최소 6자 이상)</label>
-            <input type="password" id="password" name="password" minlength="6" required>
-            <div id="passwordError" class="error-message"></div>
-        </div>
-        
-        <div class="form-group">
-            <label for="confirmPassword">비밀번호 확인</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" required>
-            <div id="confirmPasswordError" class="error-message"></div>
-        </div>
-        
-        <button type="submit" class="btn">가입하기</button>
-=======
     <form id="registerForm" th:action="@{/register}" method="post" onsubmit="return validateForm()" novalidate>
         <!-- CSRF protection disabled in SecurityConfig -->
         
@@ -474,7 +366,6 @@
             <span class="btn-text">가입하기</span>
             <span class="btn-loader" style="display: none;">처리 중...</span>
         </button>
->>>>>>> 4256b0b (거의 다했다)
     </form>
     
     <div class="login-link">
@@ -483,352 +374,352 @@
 </div>
 
 <script>
-<<<<<<< HEAD
-function validateForm() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    let isValid = true;
-    
-    // Reset error messages
-    document.getElementById('emailError').textContent = '';
-    document.getElementById('passwordError').textContent = '';
-    document.getElementById('confirmPasswordError').textContent = '';
-    
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-=======
-// 인증번호 전송 함수
-async function sendVerificationCode() {
-    const email = document.getElementById('email').value.trim();
-    const emailError = document.getElementById('emailError');
-    const verificationCodeGroup = document.getElementById('verificationCodeGroup');
-    const sendVerificationBtn = document.getElementById('sendVerificationBtn');
-    
-    // 이전 오류 메시지 초기화
-    emailError.textContent = '';
-    emailError.className = 'error-message';
-    
-    // 이메일 유효성 검사
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!email) {
-        emailError.textContent = '이메일을 입력해주세요.';
-        document.getElementById('email').focus();
-        return;
-    } else if (!emailRegex.test(email)) {
-        emailError.textContent = '유효한 이메일 주소를 입력해주세요.';
-        document.getElementById('email').focus();
-        return;
-    }
-    
-    // 버튼 비활성화 및 로딩 상태 표시
-    const originalText = sendVerificationBtn.innerHTML;
-    sendVerificationBtn.disabled = true;
-    sendVerificationBtn.innerHTML = '<span class="btn-loader"></span> 전송 중...';
-    
-    try {
-        // 서버로 인증번호 요청
-        const formData = new URLSearchParams();
-        formData.append('email', email);
+    // 인증번호 전송 함수
+    async function sendVerificationCode() {
+        const email = document.getElementById('email').value.trim();
+        const emailError = document.getElementById('emailError');
+        const verificationCodeGroup = document.getElementById('verificationCodeGroup');
+        const sendVerificationBtn = document.getElementById('sendVerificationBtn');
         
-        console.log('Sending verification request for email:', email);
+        // 이전 오류 메시지 초기화
+        emailError.textContent = '';
+        emailError.className = 'error-message';
         
-        // 10초 타임아웃 설정을 위한 AbortController
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초 타임아웃
+        // 이메일 유효성 검사
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!email) {
+            emailError.textContent = '이메일을 입력해주세요.';
+            document.getElementById('email').focus();
+            return;
+        } else if (!emailRegex.test(email)) {
+            emailError.textContent = '유효한 이메일 주소를 입력해주세요.';
+            document.getElementById('email').focus();
+            return;
+        }
+        
+        // 버튼 비활성화 및 로딩 상태 표시
+        const originalText = sendVerificationBtn.innerHTML;
+        sendVerificationBtn.disabled = true;
+        sendVerificationBtn.innerHTML = '<span class="btn-loader"></span> 전송 중...';
         
         try {
-            console.log('Starting fetch request...');
-            const response = await fetch('/api/auth/send-verification', {
+            // 서버로 인증번호 요청
+            const formData = new URLSearchParams();
+            formData.append('email', email);
+            
+            console.log('Sending verification request for email:', email);
+            
+            // 10초 타임아웃 설정을 위한 AbortController
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초 타임아웃
+            
+            try {
+                console.log('Starting fetch request...');
+                const response = await fetch('/api/auth/send-verification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData,
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                
+                console.log('Request completed, status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    throw new Error(`서버 오류: ${errorText || '인증번호 전송에 실패했습니다.'}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                // Show verification code input field
+                const verificationCodeGroup = document.getElementById('verificationCodeGroup');
+                if (verificationCodeGroup) {
+                    verificationCodeGroup.style.display = 'block';
+                }
+                
+                // Start countdown timer
+                startCountdown(600); // 10 minutes
+                
+                // Show success message
+                const emailError = document.getElementById('emailError');
+                if (emailError) {
+                    emailError.textContent = '인증번호가 전송되었습니다. 이메일을 확인해주세요.';
+                    emailError.className = 'success-message';
+                }
+                
+                return data;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                console.error('Fetch error:', error);
+                if (error.name === 'AbortError') {
+                    throw new Error('인증번호 전송 요청이 시간 초과되었습니다. 네트워크 연결을 확인해주세요.');
+                }
+                throw error;
+            }
+            
+        } catch (error) {
+            console.error('Error:', error);
+            emailError.textContent = error.message || '인증번호 전송 중 오류가 발생했습니다.';
+            emailError.className = 'error-message';
+            sendVerificationBtn.disabled = false;
+            sendVerificationBtn.innerHTML = originalText;
+        }
+    }
+
+    // 타이머 카운트다운 함수
+    function startCountdown(seconds) {
+        const sendVerificationBtn = document.getElementById('sendVerificationBtn');
+        let remaining = seconds;
+        
+        // 버튼 비활성화 및 초기 타이머 텍스트 설정
+        sendVerificationBtn.disabled = true;
+        updateButtonText(remaining);
+        
+        // 1초마다 카운트다운
+        const countdown = setInterval(() => {
+            remaining--;
+            
+            if (remaining <= 0) {
+                // 타이머 종료
+                clearInterval(countdown);
+                sendVerificationBtn.disabled = false;
+                sendVerificationBtn.innerHTML = '인증번호 재전송';
+                
+                // 타이머 종료 시 이메일 입력 필드 초기화
+                const emailInput = document.getElementById('email');
+                if (emailInput) {
+                    emailInput.readOnly = false;
+                }
+            } else {
+                // 버튼 텍스트 업데이트
+                updateButtonText(remaining);
+            }
+        }, 1000);
+        
+        // 남은 시간을 분:초 형식으로 변환하여 버튼 텍스트 업데이트
+        function updateButtonText(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            sendVerificationBtn.innerHTML = `재전송 (${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds})`;
+        }
+        
+        // 이메일 입력 필드 잠금 (재전송 방지)
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.readOnly = true;
+        }
+    }
+
+    // 인증번호 입력 필드에서 Enter 키 이벤트 처리
+    document.addEventListener('DOMContentLoaded', function() {
+        const verificationCodeInput = document.getElementById('verificationCode');
+        if (verificationCodeInput) {
+            verificationCodeInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    // 폼 제출 대신 다음 필드로 이동 또는 폼 제출
+                    const form = document.getElementById('registerForm');
+                    if (form.password) {
+                        form.password.focus();
+                    } else {
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                }
+            });
+            
+            // 숫자만 입력 가능하도록 처리
+            verificationCodeInput.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                if (this.value.length > 6) {
+                    this.value = this.value.slice(0, 6);
+                }
+            });
+        }
+        
+        // 이메일 입력 필드에서 Enter 키 이벤트 처리
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    sendVerificationCode();
+                }
+            });
+        }
+    });
+
+    // 비밀번호 유효성 검사 및 힌트 업데이트
+    function validatePassword() {
+        const password = document.getElementById('password').value;
+        const passwordLength = document.getElementById('passwordLength');
+        const passwordLetter = document.getElementById('passwordLetter');
+        const passwordNumber = document.getElementById('passwordNumber');
+        
+        // 길이 검사 (6자 이상)
+        const isLengthValid = password.length >= 6;
+        // 영문 포함 여부
+        const hasLetter = /[a-zA-Z]/.test(password);
+        // 숫자 포함 여부
+        const hasNumber = /[0-9]/.test(password);
+        
+        // 힌트 업데이트
+        passwordLength.classList.toggle('valid', isLengthValid);
+        passwordLetter.classList.toggle('valid', hasLetter);
+        passwordNumber.classList.toggle('valid', hasNumber);
+        
+        // 전체 유효성 반환
+        return isLengthValid && hasLetter && hasNumber;
+    }
+
+    // 폼 유효성 검사
+    function validateForm() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const verificationCode = document.getElementById('verificationCode')?.value;
+        
+        // 에러 메시지 초기화
+        document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        
+        let isValid = true;
+        
+        // 이메일 유효성 검사
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!email) {
+            document.getElementById('emailError').textContent = '이메일을 입력해주세요.';
+            isValid = false;
+        } else if (!emailRegex.test(email)) {
+            document.getElementById('emailError').textContent = '유효한 이메일 주소를 입력해주세요.';
+            isValid = false;
+        }
+        
+        // 비밀번호 유효성 검사
+        if (!password) {
+            document.getElementById('passwordError').textContent = '비밀번호를 입력해주세요.';
+            isValid = false;
+        } else if (!validatePassword()) {
+            document.getElementById('passwordError').textContent = '비밀번호 요구사항을 모두 충족해주세요.';
+            isValid = false;
+        }
+        
+        // 비밀번호 확인
+        if (!confirmPassword) {
+            document.getElementById('confirmPasswordError').textContent = '비밀번호 확인을 입력해주세요.';
+            isValid = false;
+        } else if (password !== confirmPassword) {
+            document.getElementById('confirmPasswordError').textContent = '비밀번호가 일치하지 않습니다.';
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+
+    // 폼 제출 처리
+    async function handleFormSubmit(event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // 유효성 검사
+        if (!validateForm()) {
+            return;
+        }
+        
+        // 폼 데이터 준비
+        const formData = new URLSearchParams();
+        formData.append('email', form.email.value.trim());
+        formData.append('password', form.password.value);
+        formData.append('verificationCode', form.verificationCode.value);
+        
+        try {
+            // 로딩 상태 표시
+            submitBtn.disabled = true;
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoader = submitBtn.querySelector('.btn-loader');
+            if (btnText) btnText.style.display = 'none';
+            if (btnLoader) btnLoader.style.display = 'inline-block';
+            
+            // 회원가입 요청 보내기
+            const response = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
-                body: formData,
-                signal: controller.signal
+                body: formData
             });
-            clearTimeout(timeoutId);
-            
-            console.log('Request completed, status:', response.status);
             
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Error response:', errorText);
-                throw new Error(`서버 오류: ${errorText || '인증번호 전송에 실패했습니다.'}`);
+                const errorData = await response.json();
+                throw new Error(errorData.error || '회원가입에 실패했습니다.');
             }
             
-            const data = await response.json();
-            console.log('Response data:', data);
-            
-            return data;
+            // 회원가입 성공 시 로그인 페이지로 리다이렉트
+            alert('회원가입이 완료되었습니다. 로그인해주세요.');
+            window.location.href = '/';
         } catch (error) {
-            clearTimeout(timeoutId);
-            console.error('Fetch error:', error);
-            if (error.name === 'AbortError') {
-                throw new Error('인증번호 전송 요청이 시간 초과되었습니다. 네트워크 연결을 확인해주세요.');
-            }
-            throw error;
-        }
-        
-    } catch (error) {
-        console.error('Error:', error);
-        emailError.textContent = error.message || '인증번호 전송 중 오류가 발생했습니다.';
-        emailError.className = 'error-message';
-        sendVerificationBtn.disabled = false;
-        sendVerificationBtn.innerHTML = originalText;
-    }
-}
-
-// 타이머 카운트다운 함수
-function startCountdown(seconds) {
-    const sendVerificationBtn = document.getElementById('sendVerificationBtn');
-    let remaining = seconds;
-    
-    // 버튼 비활성화 및 초기 타이머 텍스트 설정
-    sendVerificationBtn.disabled = true;
-    updateButtonText(remaining);
-    
-    // 1초마다 카운트다운
-    const countdown = setInterval(() => {
-        remaining--;
-        
-        if (remaining <= 0) {
-            // 타이머 종료
-            clearInterval(countdown);
-            sendVerificationBtn.disabled = false;
-            sendVerificationBtn.innerHTML = '인증번호 재전송';
+            console.error('Error:', error);
+            const errorMessage = error.message || '회원가입 중 오류가 발생했습니다.';
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = errorMessage;
             
-            // 타이머 종료 시 이메일 입력 필드 초기화
-            const emailInput = document.getElementById('email');
-            if (emailInput) {
-                emailInput.readOnly = false;
+            // Remove any existing error messages
+            const existingError = form.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
             }
-        } else {
-            // 버튼 텍스트 업데이트
-            updateButtonText(remaining);
+            
+            // Insert the error message before the submit button
+            submitBtn.parentNode.insertBefore(errorDiv, submitBtn);
+        } finally {
+            // 로딩 상태 해제
+            submitBtn.disabled = false;
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoader = submitBtn.querySelector('.btn-loader');
+            if (btnText) btnText.style.display = 'inline';
+            if (btnLoader) btnLoader.style.display = 'none';
         }
-    }, 1000);
-    
-    // 남은 시간을 분:초 형식으로 변환하여 버튼 텍스트 업데이트
-    function updateButtonText(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        sendVerificationBtn.innerHTML = `재전송 (${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds})`;
     }
-    
-    // 이메일 입력 필드 잠금 (재전송 방지)
-    const emailInput = document.getElementById('email');
-    if (emailInput) {
-        emailInput.readOnly = true;
-    }
-}
 
-// 인증번호 입력 필드에서 Enter 키 이벤트 처리
-document.addEventListener('DOMContentLoaded', function() {
-    const verificationCodeInput = document.getElementById('verificationCode');
-    if (verificationCodeInput) {
-        verificationCodeInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
+    // 이벤트 리스너 등록
+    document.addEventListener('DOMContentLoaded', function() {
+        // 비밀번호 입력 시 실시간 유효성 검사
+        const passwordInput = document.getElementById('password');
+        if (passwordInput) {
+            passwordInput.addEventListener('input', validatePassword);
+        }
+        
+        // 폼 제출 핸들러
+        const form = document.getElementById('registerForm');
+        if (form) {
+            form.addEventListener('submit', handleFormSubmit);
+        }
+        
+        // 인증번호 전송 버튼 클릭 이벤트
+        const sendVerificationBtn = document.getElementById('sendVerificationBtn');
+        if (sendVerificationBtn) {
+            sendVerificationBtn.addEventListener('click', sendVerificationCode);
+        }
+        const form = document.getElementById('registerForm');
+        if (form) {
+            form.addEventListener('submit', handleFormSubmit);
+        }
+        
+        // 엔터 키로 폼 제출 방지
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA' && event.target.tagName !== 'BUTTON' && event.target.type !== 'submit') {
                 event.preventDefault();
-                // 폼 제출 대신 다음 필드로 이동 또는 폼 제출
-                const form = document.getElementById('registerForm');
-                if (form.password) {
-                    form.password.focus();
-                } else {
-                    form.dispatchEvent(new Event('submit'));
-                }
             }
         });
-        
-        // 숫자만 입력 가능하도록 처리
-        verificationCodeInput.addEventListener('input', function() {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            if (this.value.length > 6) {
-                this.value = this.value.slice(0, 6);
-            }
-        });
-    }
-    
-    // 이메일 입력 필드에서 Enter 키 이벤트 처리
-    const emailInput = document.getElementById('email');
-    if (emailInput) {
-        emailInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                sendVerificationCode();
-            }
-        });
-    }
-});
-
-// 비밀번호 유효성 검사 및 힌트 업데이트
-function validatePassword() {
-    const password = document.getElementById('password').value;
-    const passwordLength = document.getElementById('passwordLength');
-    const passwordLetter = document.getElementById('passwordLetter');
-    const passwordNumber = document.getElementById('passwordNumber');
-    
-    // 길이 검사 (6자 이상)
-    const isLengthValid = password.length >= 6;
-    // 영문 포함 여부
-    const hasLetter = /[a-zA-Z]/.test(password);
-    // 숫자 포함 여부
-    const hasNumber = /[0-9]/.test(password);
-    
-    // 힌트 업데이트
-    passwordLength.classList.toggle('valid', isLengthValid);
-    passwordLetter.classList.toggle('valid', hasLetter);
-    passwordNumber.classList.toggle('valid', hasNumber);
-    
-    // 전체 유효성 반환
-    return isLengthValid && hasLetter && hasNumber;
-}
-
-// 폼 유효성 검사
-function validateForm() {
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const verificationCode = document.getElementById('verificationCode')?.value;
-    
-    // 에러 메시지 초기화
-    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-    
-    let isValid = true;
-    
-    // 이메일 유효성 검사
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!email) {
-        document.getElementById('emailError').textContent = '이메일을 입력해주세요.';
-        isValid = false;
-    } else if (!emailRegex.test(email)) {
->>>>>>> 4256b0b (거의 다했다)
-        document.getElementById('emailError').textContent = '유효한 이메일 주소를 입력해주세요.';
-        isValid = false;
-    }
-    
-<<<<<<< HEAD
-    // Password validation
-    if (password.length < 6) {
-        document.getElementById('passwordError').textContent = '비밀번호는 6자 이상이어야 합니다.';
-        isValid = false;
-    }
-    
-    // Confirm password
-    if (password !== confirmPassword) {
-=======
-    // 인증번호 유효성 검사
-    if (!verificationCode) {
-        document.getElementById('verificationCodeError').textContent = '인증번호를 입력해주세요.';
-        isValid = false;
-    } else if (!/^\d{6}$/.test(verificationCode)) {
-        document.getElementById('verificationCodeError').textContent = '유효한 인증번호 6자리를 입력해주세요.';
-        isValid = false;
-    }
-    
-    // 비밀번호 유효성 검사
-    if (!password) {
-        document.getElementById('passwordError').textContent = '비밀번호를 입력해주세요.';
-        isValid = false;
-    } else if (!validatePassword()) {
-        document.getElementById('passwordError').textContent = '비밀번호 요구사항을 모두 충족해주세요.';
-        isValid = false;
-    }
-    
-    // 비밀번호 확인
-    if (!confirmPassword) {
-        document.getElementById('confirmPasswordError').textContent = '비밀번호 확인을 입력해주세요.';
-        isValid = false;
-    } else if (password !== confirmPassword) {
->>>>>>> 4256b0b (거의 다했다)
-        document.getElementById('confirmPasswordError').textContent = '비밀번호가 일치하지 않습니다.';
-        isValid = false;
-    }
-    
-    return isValid;
-}
-<<<<<<< HEAD
-    function sendVerificationCode() {
-        const email = document.getElementById('email').value;
-        if (!email) {
-            alert('이메일을 입력해주세요.');
-            return;
-        }
-        
-        // Here you would typically make an API call to send the verification code
-        // For now, we'll just show the verification code field
-        document.getElementById('verificationCodeGroup').style.display = 'block';
-        alert('인증번호가 전송되었습니다. 이메일을 확인해주세요.');
-    }
-=======
-
-// 폼 제출 처리
-async function handleFormSubmit(event) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const submitBtn = document.getElementById('submitBtn');
-    
-    // 유효성 검사
-    if (!validateForm()) {
-        return;
-    }
-    
-    // 폼 데이터 준비
-    const formData = new URLSearchParams();
-    formData.append('email', form.email.value.trim());
-    formData.append('password', form.password.value);
-    formData.append('verificationCode', form.verificationCode.value);
-    
-    try {
-        // 로딩 상태 표시
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
-        
-        // 회원가입 요청 보내기
-        const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: formData
-        });
-        
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || '회원가입에 실패했습니다.');
-        }
-        
-        // 회원가입 성공 시 로그인 페이지로 리다이렉트
-        alert('회원가입이 완료되었습니다. 로그인해주세요.');
-        window.location.href = '/login';
-    } catch (error) {
-        console.error('Error:', error);
-        alert(error.message || '회원가입 중 오류가 발생했습니다.');
-    } finally {
-        // 로딩 상태 해제
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('loading');
-    }
-}
-
-// 이벤트 리스너 등록
-document.addEventListener('DOMContentLoaded', function() {
-    // 비밀번호 입력 시 실시간 유효성 검사
-    const passwordInput = document.getElementById('password');
-    if (passwordInput) {
-        passwordInput.addEventListener('input', validatePassword);
-    }
-    
-    // 폼 제출 핸들러
-    const form = document.getElementById('registerForm');
-    if (form) {
-        form.addEventListener('submit', handleFormSubmit);
-    }
-});
->>>>>>> 4256b0b (거의 다했다)
+    });
 </script>
 </body>
 </html>
