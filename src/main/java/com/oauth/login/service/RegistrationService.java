@@ -51,8 +51,6 @@ public class RegistrationService {
         emailService.sendVerificationEmail(user.getEmail(), verificationUrl);
     }
     
-<<<<<<< HEAD
-=======
     /**
      * 이메일로 인증번호 전송
      * @param email 대상 이메일 주소
@@ -96,8 +94,6 @@ public class RegistrationService {
         
         return token;
     }
-    
->>>>>>> 4256b0b (거의 다했다)
     @Transactional
     public boolean verifyEmail(String token) {
         return tokenRepository.findByToken(token)

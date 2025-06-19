@@ -37,11 +37,8 @@ public class SecurityConfig {
                     "/login**",
                     "/oauth2/**",
                     "/error",
-<<<<<<< HEAD
-=======
                     "/api/auth/send-verification",
                     "/api/auth/register",
->>>>>>> 4256b0b (거의 다했다)
                     "/api/auth/**",
                     "/h2-console/**",
                     "/register"
