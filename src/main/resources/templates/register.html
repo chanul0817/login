@@ -380,6 +380,9 @@
         const emailError = document.getElementById('emailError');
         const verificationCodeGroup = document.getElementById('verificationCodeGroup');
         const sendVerificationBtn = document.getElementById('sendVerificationBtn');
+        const requestId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        
+        console.log(`[${requestId}] 인증번호 전송 요청 시작 - 이메일:`, email);
 
         // 이전 오류 메시지 초기화
         emailError.textContent = '';
@@ -390,92 +393,109 @@
         if (!email) {
             emailError.textContent = '이메일을 입력해주세요.';
             document.getElementById('email').focus();
+            console.log(`[${requestId}] 이메일이 비어있음`);
             return;
         } else if (!emailRegex.test(email)) {
             emailError.textContent = '유효한 이메일 주소를 입력해주세요.';
             document.getElementById('email').focus();
+            console.log(`[${requestId}] 유효하지 않은 이메일 형식:`, email);
+            return;
+        }
+
+        // 이미 요청 중인지 확인
+        if (sendVerificationBtn.classList.contains('is-loading')) {
+            console.log(`[${requestId}] 이미 처리 중인 요청이 있습니다.`);
             return;
         }
 
         // 버튼 비활성화 및 로딩 상태 표시
         const originalText = sendVerificationBtn.innerHTML;
         sendVerificationBtn.disabled = true;
+        sendVerificationBtn.classList.add('is-loading');
         sendVerificationBtn.innerHTML = '<div class="btn-loader"></div> 전송 중...';
 
         try {
-            console.log('Sending verification request for email:', email);
+            console.log(`[${requestId}] 서버에 인증 요청 전송 - 이메일:`, email);
             
             // Create URL-encoded form data
             const formData = new URLSearchParams();
             formData.append('email', email);
             
             const apiUrl = window.location.origin + '/api/auth/send-verification';
-            console.log('Sending request to:', apiUrl);
-            console.log('Request body:', formData.toString());
+            console.log(`[${requestId}] 요청 URL:`, apiUrl);
             
+            const startTime = performance.now();
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-Request-Id': requestId  // 요청 ID를 헤더에 추가
                 },
-                body: formData.toString()  // Convert URLSearchParams to string
+                body: formData.toString()
             });
-
-            console.log('Request completed, status:', response.status);
             
-            // Log response headers
-            console.log('Response headers:');
-            response.headers.forEach((value, key) => {
-                console.log(`${key}: ${value}`);
-            });
-
-            // Get response text first to handle both JSON and text responses
+            const endTime = performance.now();
+            console.log(`[${requestId}] 응답 수신 - 상태: ${response.status}, 소요시간: ${(endTime - startTime).toFixed(2)}ms`);
+            
+            // 응답 처리
             const responseText = await response.text();
-            console.log('Raw response text:', responseText);
-            
             let data;
             try {
                 data = JSON.parse(responseText);
-                console.log('Parsed response data:', data);
+                console.log(`[${requestId}] 응답 데이터:`, data);
             } catch (e) {
-                console.error('Failed to parse response as JSON:', e);
+                console.error(`[${requestId}] JSON 파싱 실패:`, e);
                 throw new Error('서버 응답을 처리할 수 없습니다.');
             }
 
             if (!response.ok) {
                 const errorMessage = data.error || '인증번호 전송에 실패했습니다.';
+                console.error(`[${requestId}] 서버 오류:`, errorMessage);
                 throw new Error(errorMessage);
             }
 
-            // Show verification code input field
+            // 인증 코드 입력 필드 표시
             if (verificationCodeGroup) {
                 verificationCodeGroup.style.display = 'block';
-                // Focus on the verification code input
                 const verificationCodeInput = document.getElementById('verificationCode');
                 if (verificationCodeInput) {
                     verificationCodeInput.focus();
                 }
             }
 
-            // Start countdown timer
-            startCountdown(600); // 10 minutes
+            // 카운트다운 타이머 시작 (10분)
+            startCountdown(600);
 
-            // Show success message
+
+            // 성공 메시지 표시
             emailError.textContent = data.message || '인증번호가 이메일로 전송되었습니다.';
             emailError.className = 'success-message';
+            console.log(`[${requestId}] 인증번호 전송 성공`);
 
             return data;
+            
         } catch (error) {
-            console.error('Error:', error);
+            console.error(`[${requestId}] 오류 발생:`, error);
             emailError.textContent = error.message || '인증번호 전송 중 오류가 발생했습니다.';
             emailError.className = 'error-message';
-        } finally {
-            // 버튼 상태 복원
-            if (sendVerificationBtn) {
-                sendVerificationBtn.disabled = false;
-                sendVerificationBtn.innerHTML = originalText;
+            
+            // 오류 발생 시 3초 후에 다시 시도할 수 있도록 메시지 표시
+            if (error.message.includes('이미 발송된 인증번호')) {
+                emailError.textContent = '이미 발송된 인증번호가 있습니다. 메일을 확인해주세요.';
             }
+            
+        } finally {
+            // 버튼 상태 복원 (최소 2초는 로딩 상태 유지)
+            setTimeout(() => {
+                if (sendVerificationBtn) {
+                    sendVerificationBtn.disabled = false;
+                    sendVerificationBtn.classList.remove('is-loading');
+                    sendVerificationBtn.innerHTML = originalText;
+                }
+            }, 2000);
+            
+            console.log(`[${requestId}] 인증번호 전송 요청 완료`);
         }
     }
 
@@ -568,8 +588,8 @@
         const passwordLetter = document.getElementById('passwordLetter');
         const passwordNumber = document.getElementById('passwordNumber');
 
-        // 길이 검사 (6자 이상)
-        const isLengthValid = password.length >= 6;
+        // 길이 검사 (8자 이상)
+        const isLengthValid = password.length >= 8;
         // 영문 포함 여부
         const hasLetter = /[a-zA-Z]/.test(password);
         // 숫자 포함 여부

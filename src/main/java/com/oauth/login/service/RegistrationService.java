@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.Random;
@@ -42,31 +43,38 @@ public class RegistrationService {
     
     @Transactional
     public void register(RegistrationRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new UserAlreadyExistsException("Email already in use: " + request.getEmail());
+        String email = request.getEmail();
+        log.info("회원가입 시도 - 이메일: {}", email);
+        
+        if (userRepository.existsByEmailAndIsVerifiedTrue(email)) {
+            throw new UserAlreadyExistsException("이미 사용 중인 이메일입니다: " + email);
         }
         
-        User user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(UserRole.ROLE_USER)
-                .isVerified(false)
-                .build();
+        // Check if user exists but not verified
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        User user;
+        
+        if (existingUser.isPresent()) {
+            // User exists but not verified - update password
+            user = existingUser.get();
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            log.info("기존 미인증 사용자 정보 업데이트 - ID: {}", user.getId());
+        } else {
+            // New user - create new user
+            user = User.builder()
+                    .email(email)
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .role(UserRole.ROLE_USER)
+                    .isVerified(false)
+                    .build();
+            log.info("새 사용자 생성 완료 - ID: {}", user.getId());
+        }
         
         userRepository.save(user);
         
-        String token = UUID.randomUUID().toString();
-        EmailVerificationToken verificationToken = new EmailVerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUser(user);
-        verificationToken.setExpiryDate(LocalDateTime.now().plusHours(24)); // 24시간 후 만료
-        tokenRepository.save(verificationToken);
-        
-        // 이메일 전송
-        String verificationUrl = "http://localhost:8080/api/auth/verify?token=" + token;
-        log.info("이메일 전송 시작 - 수신자: {}, URL: {}", user.getEmail(), verificationUrl);
-        emailService.sendVerificationEmail(user.getEmail(), verificationUrl);
-        log.info("이메일 전송 완료 - 수신자: {}", user.getEmail());
+        // Note: We're not sending verification email here anymore
+        // The verification email should be sent only when explicitly requested via /send-verification endpoint
+        log.info("사용자 등록 완료 - 이메일: {}", email);
     }
     
     /**
