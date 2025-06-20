@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -30,7 +28,51 @@ public class EmailVerificationToken {
     @Column(nullable = false, name = "expiry_date")
     private LocalDateTime expiryDate;
     
+    @Builder.Default
+    @Column(name = "is_used", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean used = false;
+    
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(expiryDate);
+    }
+    
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public String getToken() {
+        return token;
+    }
+    
+    public void setToken(String token) {
+        this.token = token;
+    }
+    
+    public User getUser() {
+        return user;
+    }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    public LocalDateTime getExpiryDate() {
+        return expiryDate;
+    }
+    
+    public void setExpiryDate(LocalDateTime expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+    
+    public boolean isUsed() {
+        return used;
+    }
+    
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 }

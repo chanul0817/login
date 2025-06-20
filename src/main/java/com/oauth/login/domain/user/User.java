@@ -31,9 +31,11 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 255)
     private String password;
     
+    @Builder.Default
     @Column(name = "is_verified", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean isVerified;
+    private Boolean isVerified = false;
     
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private UserRole role = UserRole.ROLE_USER;
@@ -78,5 +80,9 @@ public class User implements UserDetails {
     
     public void verify() {
         this.isVerified = true;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

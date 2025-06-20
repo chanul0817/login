@@ -1,13 +1,19 @@
 spring:
+  profiles:
+    active: production  # production 프로필 활성화 (console 비활성화)
+
   # Database Configuration
   datasource:
-    url: jdbc:h2:mem:login;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: ''
+    url: jdbc:mariadb://localhost:3306/login?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: 123456
     hikari:
-      maximum-pool-size: 5
-    
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,21 +21,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MariaDBDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
     open-in-view: false
-    
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: false
-        trace: false
-      
-  sql:
-    init:
-      mode: never
-  
+
+  # Email Configuration is handled by MailConfig
+
   # Security Configuration
   security:
     oauth2:
@@ -73,7 +72,7 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-            
+
   # Thymeleaf Configuration
   thymeleaf:
     cache: false
@@ -86,10 +85,10 @@ jwt:
 
 # Email Configuration
 email:
-  host: ${EMAIL_HOST:smtp.gmail.com}
-  port: ${EMAIL_PORT:587}
-  username: ${EMAIL_USERNAME:your-email@gmail.com}
-  password: ${EMAIL_PASSWORD:your-email-password}
+  host: smtp.gmail.com
+  port: 587
+  username: 8sixman@gmail.com
+  password: ddni ecgw foft wrce
   properties:
     mail:
       smtp:
