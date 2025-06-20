@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: production  # production 프로필 활성화 (console 비활성화)
 
   # Database Configuration
   datasource:

@@ -64,7 +64,9 @@ public class RegistrationService {
         
         // 이메일 전송
         String verificationUrl = "http://localhost:8080/api/auth/verify?token=" + token;
+        log.info("이메일 전송 시작 - 수신자: {}, URL: {}", user.getEmail(), verificationUrl);
         emailService.sendVerificationEmail(user.getEmail(), verificationUrl);
+        log.info("이메일 전송 완료 - 수신자: {}", user.getEmail());
     }
     
     /**

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Primary  // EmailService의 기본 구현체로 설정
-@Profile("production")  // production 프로필에서만 활성화
 public class SmtpEmailService implements EmailService {
     private static final Logger log = LoggerFactory.getLogger(SmtpEmailService.class);
     
